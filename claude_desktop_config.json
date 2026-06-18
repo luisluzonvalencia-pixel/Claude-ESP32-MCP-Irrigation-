@@ -1,0 +1,35 @@
+{
+  "mcpServers": {
+    "esp32_control": {
+      "command": "C:/Users/LUISLUVA/AppData/Local/Programs/Python/Python311/python.exe",
+      "args": [
+        "C:/Users/LUISLUVA/Desktop/PC/domorit/domotica_mcp.py"
+      ]
+    }
+  },
+  "coworkUserFilesPath": "C:\\Users\\LUISLUVA\\Claude",
+  "preferences": {
+    "coworkScheduledTasksEnabled": false,
+    "ccdScheduledTasksEnabled": false,
+    "sidebarMode": "chat",
+    "bypassPermissionsGateByAccount": {
+      "e501783d-d395-40e7-8d35-e748cbd6d465": false
+    },
+    "coworkWebSearchEnabled": true,
+    "coworkModelAutoFallbackByAccount": {
+      "e501783d-d395-40e7-8d35-e748cbd6d465": true
+    },
+    "remoteToolsDeviceName": "desktop-crrgpss",
+    "epitaxyPrefs": {
+      "starred-local-code-sessions": [],
+      "starred-cowork-spaces": [],
+      "starred-session-groups": [],
+      "dframe-local-slice": {
+        "pinnedOrder": [],
+        "customGroupAssignments": {},
+        "customGroupOrder": {}
+      }
+    },
+    "coworkHipaaRestricted": false
+  }
+}
