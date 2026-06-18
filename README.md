@@ -22,15 +22,15 @@ Sistema de riego inteligente basado en ESP32 controlado mediante Claude AI a tra
 
 ### Dashboard
 
-![Dashboard](images/dashboard.jpg)
+https://github.com/luisluzonvalencia-pixel/Claude-ESP32-MCP-Irrigation-/blob/main/images/dashboard_1.jpg
 
 ### Hardware
 
-![Hardware](images/hardware.jpg)
+https://github.com/luisluzonvalencia-pixel/Claude-ESP32-MCP-Irrigation-/blob/main/images/esp32_1.jpg
 
 ### Claude AI Control
 
-![Claude](images/claude-control.jpg)
+https://github.com/luisluzonvalencia-pixel/Claude-ESP32-MCP-Irrigation-/blob/main/images/Claude_1.jpg
 
 ---
 
@@ -75,7 +75,7 @@ Sistema de Riego
 
 ▶ Ver demostración completa:
 
-https://youtube.com/TU_VIDEO
+https://www.youtube.com/watch?v=NoB7g6SSOg0&t=12s
 
 ---
 
@@ -87,3 +87,4 @@ Ingeniero Electrónico | IoT | ESP32 | Automatización
 
 GitHub:
 https://github.com/luisluzonvalencia-pixel
+https://luisluzonvalencia-pixel.github.io/#proyectos
