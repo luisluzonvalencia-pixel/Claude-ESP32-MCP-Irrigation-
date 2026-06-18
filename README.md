@@ -86,5 +86,4 @@ Luis Alberto Luzon Valencia
 Ingeniero Electrónico | IoT | ESP32 | Automatización
 
 GitHub:
-https://github.com/luisluzonvalencia-pixel
 https://luisluzonvalencia-pixel.github.io/#proyectos
