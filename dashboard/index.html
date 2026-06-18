@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IOT LUVA</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0a0f0a; --card:#111812; --border:#1e2e1e;
+  --green:#39ff6a; --green-dim:#1a7a38; --green-glow:rgba(57,255,106,.15);
+  --cyan:#00e5ff; --yellow:#f0e060; --red:#ff4444;
+  --text:#c8e8c8; --text-dim:#4a7a4a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;
+  background-image:linear-gradient(rgba(57,255,106,.03) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(57,255,106,.03) 1px,transparent 1px);
+  background-size:40px 40px;pointer-events:none;z-index:0}
+.wrap{max-width:1400px;margin:0 auto;padding:20px 24px 32px;position:relative;z-index:1}
+
+/* HEADER */
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.logo{font-family:'Space Mono',monospace;font-size:1.3rem;font-weight:700;color:var(--green);letter-spacing:.2em;text-shadow:0 0 20px var(--green)}
+.logo span{color:var(--text-dim)}
+.hdr-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.status-pill{display:flex;align-items:center;gap:7px;font-family:'Space Mono',monospace;font-size:.68rem;color:var(--text-dim)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:blink 2s ease-in-out infinite}
+.dot.off{background:var(--red);box-shadow:0 0 8px var(--red);animation:none}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.btn{background:transparent;border:1px solid var(--green-dim);color:var(--green);font-family:'Space Mono',monospace;font-size:.68rem;padding:7px 14px;border-radius:4px;cursor:pointer;letter-spacing:.08em;transition:all .2s;display:inline-flex;align-items:center;gap:5px}
+.btn:hover{background:var(--green-glow);border-color:var(--green)}
+.ico{display:inline-block}
+.btn.spin .ico{animation:rot 1s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+.btn-sec{border-color:#334433;color:var(--text-dim)}
+.btn-sec:hover{border-color:var(--green-dim);color:var(--text)}
+
+/* IP BAR */
+.ip-bar{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 16px;margin-bottom:16px;flex-wrap:wrap}
+.ip-bar label{font-family:'Space Mono',monospace;font-size:.6rem;color:var(--text-dim);letter-spacing:.1em;white-space:nowrap}
+.ip-bar input{background:#0a100a;border:1px solid var(--border);color:var(--text);font-family:'Space Mono',monospace;font-size:.72rem;padding:5px 10px;border-radius:4px;outline:none;width:160px;transition:border-color .2s}
+.ip-bar input:focus{border-color:var(--green-dim)}
+.ip-hint{font-family:'Space Mono',monospace;font-size:.6rem;color:var(--text-dim);margin-left:auto}
+
+/* SENSOR CARDS */
+.sensors-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.sensor-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:28px 32px 32px;position:relative;overflow:hidden;transition:border-color .3s}
+.sensor-card:hover{border-color:var(--green-dim)}
+.sensor-card::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(57,255,106,.04),transparent 70%);pointer-events:none}
+.s-label{font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:.2em;color:var(--text-dim);margin-bottom:20px}
+.gauge-wrap{display:flex;flex-direction:column;align-items:center;gap:4px}
+.gauge-svg{width:160px;height:90px;overflow:visible}
+.g-track{fill:none;stroke:#1a2a1a;stroke-width:8;stroke-linecap:round}
+.g-fill{fill:none;stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset 1s ease,stroke .5s ease}
+.g-val{font-family:'Space Mono',monospace;font-size:2.6rem;font-weight:700;color:var(--green);letter-spacing:-.02em;line-height:1}
+.g-val.c{color:var(--cyan)}
+.g-unit{font-size:1rem;color:var(--text-dim);vertical-align:super;font-weight:400}
+.g-sub{font-family:'Space Mono',monospace;font-size:.65rem;color:var(--text-dim);letter-spacing:.1em;margin-top:2px}
+
+/* SOIL */
+.soil-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px 32px;margin-bottom:16px}
+.soil-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.soil-status{font-family:'Space Mono',monospace;font-size:.75rem;padding:4px 12px;border-radius:20px;border:1px solid currentColor;transition:all .5s}
+.muy-humedo{color:var(--cyan);background:rgba(0,229,255,.08)}
+.humedo{color:var(--green);background:rgba(57,255,106,.08)}
+.moderado{color:var(--yellow);background:rgba(240,224,96,.08)}
+.seco{color:#ff8844;background:rgba(255,136,68,.08)}
+.muy-seco{color:var(--red);background:rgba(255,68,68,.08)}
+.soil-track{background:#1a2a1a;border-radius:4px;height:10px;overflow:hidden}
+.soil-fill{height:100%;border-radius:4px;transition:width 1s ease,background .5s ease}
+.soil-axis{display:flex;justify-content:space-between;margin-top:8px}
+.soil-axis span{font-family:'Space Mono',monospace;font-size:.6rem;color:var(--text-dim)}
+.soil-raw{font-family:'Space Mono',monospace;font-size:.6rem;color:var(--text-dim);text-align:right;margin-top:6px}
+
+/* RELAYS */
+.relay-section{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px 28px}
+.relay-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.relay-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.rly{background:#0f1a10;border:1px solid var(--border);border-radius:8px;padding:14px 12px;cursor:pointer;transition:all .25s;display:flex;flex-direction:column;align-items:center;gap:8px;font-family:inherit}
+.rly:hover{border-color:var(--green-dim);background:#122014}
+.rly.on{background:#0d2a10;border-color:var(--green);box-shadow:0 0 16px rgba(57,255,106,.1),inset 0 0 20px rgba(57,255,106,.05)}
+.rly.loading{opacity:.5;pointer-events:none}
+.rly-name{font-family:'Space Mono',monospace;font-size:.7rem;letter-spacing:.1em;color:var(--text-dim)}
+.rly.on .rly-name{color:var(--green)}
+.rly-pin{font-family:'Space Mono',monospace;font-size:.6rem;color:#334433}
+.rly.on .rly-pin{color:var(--green-dim)}
+.rly-dot{width:10px;height:10px;border-radius:50%;background:#1e2e1e;transition:all .3s}
+.rly.on .rly-dot{background:var(--green);box-shadow:0 0 10px var(--green)}
+
+/* FOOTER */
+footer{display:flex;justify-content:space-between;align-items:center;margin-top:20px;padding-top:16px;border-top:1px solid var(--border);flex-wrap:wrap;gap:8px}
+.countdown{font-family:'Space Mono',monospace;font-size:.65rem;color:var(--text-dim)}
+.err{font-family:'Space Mono',monospace;font-size:.65rem;color:var(--red);display:none;max-width:70%}
+
+/* ERROR HINT */
+.err-hint{background:#120a00;border:1px solid #443300;border-radius:8px;padding:14px 18px;margin-bottom:16px;display:none}
+.err-hint p{font-family:'Space Mono',monospace;font-size:.63rem;color:#f0b040;line-height:1.9}
+.err-hint b{color:#ffd060}
+.err-hint code{background:#0a0800;padding:2px 6px;border-radius:3px;color:#ffd060}
+
+@media(max-width:700px){
+  .sensors-grid{grid-template-columns:1fr}
+  .relay-grid{grid-template-columns:repeat(2,1fr)}
+  .wrap{padding:12px}
+  .ip-hint{display:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="logo">LUVA<span>IOT</span></div>
+    <div class="hdr-right">
+      <div class="status-pill">
+        <div class="dot" id="connDot"></div>
+        <span id="lastUpdate">Conectando…</span>
+      </div>
+      <button class="btn" id="refreshBtn" onclick="manualRefresh()">
+        <span class="ico">↺</span> Actualizar
+      </button>
+    </div>
+  </header>
+
+  <!-- IP BAR -->
+  <div class="ip-bar">
+    <label>IP ESP32</label>
+    <input id="ipInput" value="192.168.1.101"
+      onchange="saveIp()"
+      onkeydown="if(event.key==='Enter')saveIp()"/>
+    <button class="btn" onclick="saveIp()">✓ Aplicar</button>
+    <span class="ip-hint">GET /sensores · GET /set?pin=N&estado=0|1</span>
+  </div>
+
+  <!-- ERROR HINT -->
+  <div class="err-hint" id="errHint">
+    <p>⚠ <b>Sin respuesta del ESP32.</b> Causas comunes:</p>
+    <p>
+      1. El ESP32 no tiene CORS → sube el firmware corregido.<br>
+      2. IP incorrecta → verifica en el Monitor Serie de Arduino.<br>
+      3. Estás en una red diferente → conéctate a <b>LUVA Inter</b>.<br>
+      4. Prueba abriendo en otra pestaña: <b id="testLink"></b>
+    </p>
+  </div>
+
+  <!-- SENSORES -->
+  <div class="sensors-grid">
+    <div class="sensor-card">
+      <div class="s-label">TEMPERATURA</div>
+      <div class="gauge-wrap">
+        <svg class="gauge-svg" viewBox="0 0 160 90">
+          <path class="g-track" d="M20 85 A60 60 0 0 1 140 85"/>
+          <path class="g-fill" id="tArc" d="M20 85 A60 60 0 0 1 140 85"
+            stroke="#39ff6a" stroke-dasharray="188.5" stroke-dashoffset="188.5"/>
+        </svg>
+        <div class="g-val" id="tVal">—<span class="g-unit">°C</span></div>
+        <div class="g-sub">0 – 50 °C</div>
+      </div>
+    </div>
+    <div class="sensor-card">
+      <div class="s-label">HUMEDAD AIRE</div>
+      <div class="gauge-wrap">
+        <svg class="gauge-svg" viewBox="0 0 160 90">
+          <path class="g-track" d="M20 85 A60 60 0 0 1 140 85"/>
+          <path class="g-fill" id="hArc" d="M20 85 A60 60 0 0 1 140 85"
+            stroke="#00e5ff" stroke-dasharray="188.5" stroke-dashoffset="188.5"/>
+        </svg>
+        <div class="g-val c" id="hVal">—<span class="g-unit">%</span></div>
+        <div class="g-sub">0 – 100 %</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="soil-card">
+    <div class="soil-hdr">
+      <div class="s-label" style="margin:0">HUMEDAD DEL SUELO</div>
+      <div class="soil-status humedo" id="soilStatus">—</div>
+    </div>
+    <div class="soil-track">
+      <div class="soil-fill" id="soilBar" style="width:0%;background:#39ff6a"></div>
+    </div>
+    <div class="soil-axis"><span>Seco (0%)</span><span>Húmedo (100%)</span></div>
+    <div class="soil-raw" id="soilRaw"></div>
+  </div>
+
+  <div class="relay-section">
+    <div class="relay-hdr">
+      <div class="s-label" style="margin:0">RELÉS — CLICK PARA CONTROLAR</div>
+    </div>
+    <div class="relay-grid" id="relayGrid"></div>
+  </div>
+
+  <footer>
+    <div class="countdown" id="countdown">Iniciando…</div>
+    <div class="err" id="errMsg"></div>
+  </footer>
+</div>
+
+<script>
+// ── CONFIG ────────────────────────────────────────────
+const PINS  = [5, 18, 19, 23, 33, 27, 26, 25];
+const NAMES = ['R1','R2','R3','R4','R5','R6','R7','R8'];
+const INTERVAL = 5;
+
+let ESP_IP = localStorage.getItem('tm_ip') || '192.168.1.101';
+document.getElementById('ipInput').value = ESP_IP;
+
+let relayState = {};
+PINS.forEach(p => relayState[p] = false);
+let timer = null;
+let countdown = INTERVAL;
+
+// ── IP ────────────────────────────────────────────────
+function saveIp() {
+  ESP_IP = document.getElementById('ipInput').value.trim();
+  localStorage.setItem('tm_ip', ESP_IP);
+  document.getElementById('errHint').style.display = 'none';
+  clearInterval(timer);
+  fetchAll().then(startCountdown);
+}
+
+const url = path => `http://${ESP_IP}${path}`;
+
+// ── FETCH SENSORES ────────────────────────────────────
+async function fetchSensors() {
+  const r = await fetch(url('/sensores'), { signal: AbortSignal.timeout(5000) });
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  return await r.json();
+}
+
+// ── CONTROL RELÉ ─────────────────────────────────────
+async function setRelay(pin, estado) {
+  const r = await fetch(url(`/set?pin=${pin}&estado=${estado ? 1 : 0}`),
+    { signal: AbortSignal.timeout(5000) });
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+}
+
+// ── GAUGE ─────────────────────────────────────────────
+function setArc(id, val, min, max, color) {
+  const el = document.getElementById(id);
+  const pct = Math.max(0, Math.min(1, (val - min) / (max - min)));
+  el.style.strokeDashoffset = 188.5 * (1 - pct);
+  el.style.stroke = color;
+}
+const tcol = t => t < 15 ? '#00e5ff' : t < 25 ? '#39ff6a' : t < 35 ? '#f0e060' : '#ff4444';
+const hcol = h => h < 30 ? '#f0e060' : h < 60 ? '#39ff6a' : '#00e5ff';
+
+// ── SUELO (viene como porcentaje 0-100) ───────────────
+function soilInfo(pct) {
+  pct = Math.max(0, Math.min(100, pct));
+  if (pct >= 80) return { label: 'Muy Húmedo', cls: 'muy-humedo', color: '#00e5ff' };
+  if (pct >= 60) return { label: 'Húmedo',     cls: 'humedo',     color: '#39ff6a' };
+  if (pct >= 40) return { label: 'Moderado',   cls: 'moderado',   color: '#f0e060' };
+  if (pct >= 20) return { label: 'Seco',       cls: 'seco',       color: '#ff8844' };
+  return               { label: 'Muy Seco',   cls: 'muy-seco',   color: '#ff4444' };
+}
+
+// ── UPDATE UI ─────────────────────────────────────────
+function updateUI(d) {
+  // Temperatura
+  document.getElementById('tVal').innerHTML = `${d.temp.toFixed(1)}<span class="g-unit">°C</span>`;
+  setArc('tArc', d.temp, 0, 50, tcol(d.temp));
+
+  // Humedad aire
+  document.getElementById('hVal').innerHTML = `${d.hum.toFixed(1)}<span class="g-unit">%</span>`;
+  setArc('hArc', d.hum, 0, 100, hcol(d.hum));
+
+  // Suelo — acepta suelo_porcentaje (nuevo firmware) o suelo (viejo)
+  const pct = d.suelo_porcentaje ?? d.suelo ?? 0;
+  const raw = d.suelo_raw ?? '—';
+  const si  = soilInfo(pct);
+  document.getElementById('soilBar').style.cssText = `width:${pct}%;background:${si.color}`;
+  const st = document.getElementById('soilStatus');
+  st.textContent = si.label;
+  st.className = 'soil-status ' + si.cls;
+  document.getElementById('soilRaw').textContent = `${pct}%  ·  ADC raw: ${raw}`;
+
+  // ─── ACTUALIZAR ESTADO DE RELÉS DESDE EL ESP32 ───
+  if (d.relays) {
+    PINS.forEach(pin => {
+      const key = 'relay_' + pin;
+      if (d.relays[key] !== undefined) {
+        const estado = d.relays[key] === 1;
+        if (relayState[pin] !== estado) {
+          relayState[pin] = estado;
+          const btn = document.getElementById('rly-' + pin);
+          if (btn) {
+            btn.className = 'rly' + (estado ? ' on' : '');
+          }
+        }
+      }
+    });
+  }
+
+  // Estado conexión
+  document.getElementById('lastUpdate').textContent =
+    'Actualizado ' + new Date().toLocaleTimeString('es-PE');
+  document.getElementById('connDot').className = 'dot';
+  document.getElementById('errMsg').style.display = 'none';
+  document.getElementById('errHint').style.display = 'none';
+}
+
+function showError(e) {
+  document.getElementById('connDot').className = 'dot off';
+  document.getElementById('errMsg').textContent = '⚠ ' + e.message;
+  document.getElementById('errMsg').style.display = 'block';
+  document.getElementById('testLink').textContent = `http://${ESP_IP}/sensores`;
+  document.getElementById('errHint').style.display = 'block';
+}
+
+// ── MAIN FETCH ────────────────────────────────────────
+async function fetchAll() {
+  try {
+    const data = await fetchSensors();
+    updateUI(data);
+  } catch(e) {
+    showError(e);
+  }
+}
+
+// ── TOGGLE RELÉ ───────────────────────────────────────
+async function toggleRelay(pin) {
+  const btn = document.getElementById('rly-' + pin);
+  if (!btn) return;
+  btn.classList.add('loading');
+  const next = !relayState[pin];
+  try {
+    await setRelay(pin, next);
+    relayState[pin] = next;
+    btn.className = 'rly' + (next ? ' on' : '');
+  } catch(e) {
+    console.warn('Relay error:', e);
+  }
+  btn.classList.remove('loading');
+}
+
+// ── BUILD RELAYS ──────────────────────────────────────
+function buildRelays() {
+  const g = document.getElementById('relayGrid');
+  g.innerHTML = '';
+  PINS.forEach((pin, i) => {
+    const b = document.createElement('button');
+    b.className = 'rly';
+    b.id = 'rly-' + pin;
+    b.innerHTML = `<div class="rly-name">${NAMES[i]}</div><div class="rly-dot"></div><div class="rly-pin">Pin ${pin}</div>`;
+    b.onclick = () => toggleRelay(pin);
+    g.appendChild(b);
+  });
+}
+
+// ── COUNTDOWN ─────────────────────────────────────────
+function startCountdown() {
+  clearInterval(timer);
+  countdown = INTERVAL;
+  timer = setInterval(() => {
+    countdown--;
+    document.getElementById('countdown').textContent =
+      countdown > 0 ? `Actualizando en ${countdown}s…` : 'Actualizando…';
+    if (countdown <= 0) { clearInterval(timer); fetchAll().then(startCountdown); }
+  }, 1000);
+}
+
+function manualRefresh() {
+  const btn = document.getElementById('refreshBtn');
+  btn.classList.add('spin');
+  clearInterval(timer);
+  fetchAll().then(() => { btn.classList.remove('spin'); startCountdown(); })
+            .catch(() =>   btn.classList.remove('spin'));
+}
+
+// ── INIT ──────────────────────────────────────────────
+buildRelays();
+fetchAll().then(startCountdown);
+</script>
+</body>
+</html>
