@@ -1,8 +1,8 @@
-# 🤖 Claude AI + ESP32 + MCP Smart Irrigation
+# Claude AI + ESP32 + MCP Smart Irrigation
 
 Sistema de riego inteligente basado en ESP32 controlado mediante Claude AI a través de MCP (Model Context Protocol).
 
-## 🚀 Características
+## Características
 
 ✅ Lectura de temperatura y humedad (DHT22)
 
